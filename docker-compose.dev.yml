@@ -1,0 +1,36 @@
+version: "3"
+services:
+  node-app:
+    build:
+      context: .
+      args:
+        NODE_ENV: development
+    volumes:
+      - ./:/app:ro
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - MONGO_USER=rafaalvfe
+      - MONGO_PASSWORD=mysecurepassword
+    command: npm run dev
+    ports:
+      - "9229:9229"
+
+  mongo:
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=rafaalvfe
+      - MONGO_INITDB_ROOT_PASSWORD=mysecurepassword
+
+  redis:
+    ports:
+      - "6379:6379"
+
+  redis-commander:
+    container_name: redis-commander
+    hostname: redis-commander
+    image: rediscommander/redis-commander:latest
+    restart: always
+    environment:
+    - REDIS_HOSTS=local:redis:6379
+    ports:
+    - "8081:8081"
